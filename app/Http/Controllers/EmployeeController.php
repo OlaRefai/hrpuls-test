@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
+use App\Http\Requests\StoreScheduleChangeRequest;
 use App\Models\Employee;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Schema;
 
 class EmployeeController extends Controller
 {
@@ -71,5 +73,33 @@ class EmployeeController extends Controller
         $employee->delete();
            
         return redirect()->route('employees.index')->with('success','Employee deleted successfully');
+    }
+
+    /**
+     * Display the future change form page.
+     */
+    public function schedule(Employee $employee) : View
+    {
+        return view('employees.schedule', compact('employee'));
+    }
+
+    /**
+     * Schedule a future change.
+     */
+    public function storeSchedule(StoreScheduleChangeRequest $request, Employee $employee): RedirectResponse
+    {
+        $columns = Schema::getColumnListing('employees');
+
+        foreach ($columns as $column) {
+            if ($request->has($column) && $request->input($column) !== null) {
+                $employee->futureChanges()->create([
+                    'column' => $column,
+                    'new_value' => $request->input($column),
+                    'change_date' => $request->input('change_date'),
+                ]);
+            }
+        }
+
+        return redirect()->route('employees.index')->with('success', 'Changes scheduled successfully.');
     }
 }

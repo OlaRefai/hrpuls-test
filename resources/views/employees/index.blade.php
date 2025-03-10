@@ -2,7 +2,7 @@
 @section('title', 'Employee List')
 @section('content')
 
-<div class="container mt-5">
+    <div class="container mt-5">
         <br>
         <a href="{{ route('employees.create') }}" class="btn btn-primary mb-3">Add New Employee</a>
 
@@ -30,13 +30,14 @@
                         <td>{{ $employee->telephone }}</td>
                         <td>{{ $employee->jobtitle }}</td>
                         <td>
-                        <a href="{{ route('employees.show', $employee) }}" class="btn btn-info btn-sm">Show</a>   
-                        <a href="{{ route('employees.edit', $employee) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('employees.destroy', $employee) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
+                            <a href="{{ route('employees.show', $employee) }}" class="btn btn-info btn-sm">Show</a>   
+                            <a href="{{ route('employees.edit', $employee) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <form action="{{ route('employees.destroy', $employee) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                                </form>
+                            <a href="{{ route('employees.schedule', $employee) }}" class="btn btn-secondary btn-sm">Schedule Changes</a>
                         </td>
                     </tr>
                 @empty

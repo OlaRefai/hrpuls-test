@@ -27,10 +27,12 @@ class ApplyScheduledChanges extends Command
      */
     public function handle()
     {
-        $changes = FutureChange::where('change_date', '<=', Carbon::now())->get();
+        $changes = FutureChange::where('change_date', '<=', Carbon::now())->with('employee')->get();
         foreach ($changes as $change) {
             $employee = $change->employee;
-            $employee->update([$change->column => $change->new_value]);
+            if($employee) {
+                $employee->update([$change->column => $change->new_value]);
+            }
             $change->delete();
         }
     }
